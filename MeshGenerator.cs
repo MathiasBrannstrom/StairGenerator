@@ -112,6 +112,13 @@ namespace StairGenerator
             return mesh;
         }
 
+        public static MeshGeometry3D GenerateRectangularSpiralMesh(List<StairLevel> stairLevels, double stepHeight, double stepLength, double stairWidth, double platformSize)
+        {
+            // TODO: Implement rectangular spiral generation
+            // This needs to be refactored to use a more modular approach with directional stair generation
+            return new MeshGeometry3D();
+        }
+
         private static void GenerateStairLevel(Point3DCollection positions, Int32Collection triangleIndices, Vector3DCollection normals,
             double startX, double startZ, double startY, int stepCount, double stepHeight, double stepLength, double stairWidth, bool isForward)
         {
@@ -309,6 +316,7 @@ namespace StairGenerator
             else
                 AddQuadTriangles(triangleIndices, baseIndex + 7, baseIndex + 4, baseIndex + 5, baseIndex + 6);
         }
+
 
         private static void AddQuadTriangles(Int32Collection triangleIndices, int p0, int p1, int p2, int p3)
         {
