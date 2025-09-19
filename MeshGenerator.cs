@@ -86,8 +86,8 @@ namespace StairGenerator
                 
                 currentY += level.StepCount * stepHeight;
 
-                // Generate platform after stairs (except for the last level)
-                if (levelIndex < stairLevels.Count - 1)
+                // Generate platform after stairs
+                if (levelIndex < stairLevels.Count - 1 || levelIndex == stairLevels.Count - 1)
                 {
                     // Platform should be one step height above the last step
                     double platformY = currentY + stepHeight;
@@ -95,10 +95,14 @@ namespace StairGenerator
                         currentZ, platformY, platformWidth, platformDepth, stepHeight, isForward);
 
                     // Update position after platform (currentZ now points to far end of platform)
-                    if (isForward)
-                        currentZ += platformDepth;
-                    else
-                        currentZ -= platformDepth;
+                    // Only update position if not the last level
+                    if (levelIndex < stairLevels.Count - 1)
+                    {
+                        if (isForward)
+                            currentZ += platformDepth;
+                        else
+                            currentZ -= platformDepth;
+                    }
                 }
             }
 
@@ -293,8 +297,11 @@ namespace StairGenerator
             normals.Add(frontNormal);
             normals.Add(frontNormal);
 
-            // Add triangles for top surface (reverse winding for upward-facing)
-            AddQuadTriangles(triangleIndices, baseIndex + 0, baseIndex + 3, baseIndex + 2, baseIndex + 1);
+            // Add triangles for top surface - adjust winding for backward stairs
+            if (isForward)
+                AddQuadTriangles(triangleIndices, baseIndex + 0, baseIndex + 3, baseIndex + 2, baseIndex + 1);
+            else
+                AddQuadTriangles(triangleIndices, baseIndex + 0, baseIndex + 1, baseIndex + 2, baseIndex + 3);
 
             // Add triangles for front face - reverse winding for backward stairs to fix lighting
             if (isForward)
