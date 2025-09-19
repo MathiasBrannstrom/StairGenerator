@@ -1,0 +1,1 @@
+This is a Windows application with a GUI that let's the user generate a 3D mesh of a stair, by putting in values such as step height, step length and overall height. 
