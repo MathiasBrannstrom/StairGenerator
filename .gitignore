@@ -328,3 +328,6 @@ FodyWeavers.xsd
 
 # Claude Code
 .claude/
+
+# Single file builds
+single-file/
