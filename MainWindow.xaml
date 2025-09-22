@@ -51,7 +51,9 @@
                                 
                                 <TextBlock Text="Platform Depth (mm):" Margin="0,0,0,5"/>
                                 <TextBox x:Name="PlatformDepthTextBox" Text="1500" Margin="0,0,0,15"/>
-                                
+
+                                <CheckBox x:Name="ClockwiseCheckBox" Content="Clockwise going up" IsChecked="True" Margin="0,0,0,15"/>
+
                                 <TextBlock Text="Stair Levels:" FontWeight="Bold" Margin="0,10,0,5"/>
                                 
                                 <ScrollViewer x:Name="LevelsScrollViewer" MaxHeight="200" VerticalScrollBarVisibility="Auto">
@@ -77,45 +79,6 @@
                             </StackPanel>
                         </TabItem>
                         
-                        <TabItem Header="Rectangular Spiral" x:Name="RectangularSpiralTab">
-                            <StackPanel Margin="10">
-                                <TextBlock Text="Rectangular spiral staircase" FontStyle="Italic" Margin="0,0,0,10"/>
-                                
-                                <TextBlock Text="Step Height (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="SpiralStepHeightTextBox" Text="180" Margin="0,0,0,15"/>
-                                
-                                <TextBlock Text="Step Length (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="SpiralStepLengthTextBox" Text="280" Margin="0,0,0,15"/>
-                                
-                                <TextBlock Text="Stair Width (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="SpiralStairWidthTextBox" Text="1000" Margin="0,0,0,15"/>
-                                
-                                <TextBlock Text="Platform Size (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="SpiralPlatformSizeTextBox" Text="1000" Margin="0,0,0,15"/>
-                                
-                                <TextBlock Text="Levels:" FontWeight="Bold" Margin="0,10,0,5"/>
-                                <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
-                                    <StackPanel x:Name="SpiralLevelsStackPanel"/>
-                                </ScrollViewer>
-                                
-                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                    <Button x:Name="AddSpiralLevelButton" Content="Add Level" 
-                                            Click="AddSpiralLevelButton_Click" 
-                                            Background="#FF9800" 
-                                            Foreground="White" 
-                                            Padding="8,4" 
-                                            Margin="0,0,10,0"/>
-                                    <Button x:Name="RemoveSpiralLevelButton" Content="Remove Level" 
-                                            Click="RemoveSpiralLevelButton_Click" 
-                                            Background="#F44336" 
-                                            Foreground="White" 
-                                            Padding="8,4"/>
-                                </StackPanel>
-                                
-                                <TextBlock x:Name="SpiralTotalHeightTextBlock" Text="Total Height: 0 mm" 
-                                           FontWeight="Bold" Margin="0,10,0,0"/>
-                            </StackPanel>
-                        </TabItem>
                     </TabControl>
                     
                     <Button x:Name="GenerateButton" Content="Generate Stair" 

@@ -5,7 +5,7 @@ A Windows WPF application for generating 3D stair meshes with various configurat
 ## Features
 
 - **Real-time 3D Visualization**: Interactive 3D viewport with mouse controls
-- **Multiple Stair Types**: Single stairs, linear stairwells, and rectangular spirals (in development)
+- **Multiple Stair Types**: Single stairs and linear stairwells
 - **Mesh Export**: Export generated stairs to OBJ format
 - **Interactive Controls**: Mouse rotation, zoom, and parameter adjustment
 - **Dynamic Level Management**: Add/remove stair levels with live updates
@@ -41,7 +41,6 @@ StairGenerator/
 - **Key Methods**:
   - `GenerateSingleStairMesh()`: Basic straight staircase
   - `GenerateLinearStairwellMesh()`: Back-and-forth stairwell with platforms
-  - `GenerateRectangularSpiralMesh()`: Placeholder for spiral stairs (needs refactoring)
 - **Design Pattern**: Static methods with clear separation of concerns
 
 #### `MeshExporter.cs`
@@ -52,8 +51,7 @@ StairGenerator/
 #### `Models.cs`
 - **Purpose**: Data structures and enums
 - **Contents**:
-  - `StairType`: Enum for stair types (Single, LinearStairwell, RectangularSpiral)
-  - `SpiralDirection`: Enum for spiral directions (Forward, Left, Backward, Right)
+  - `StairType`: Enum for stair types (Single, LinearStairwell)
   - `StairLevel`: Class representing a level with step count
 
 ### Coordinate System
@@ -114,11 +112,6 @@ StairGenerator/
 
 ## Known Issues & Technical Debt
 
-### Rectangular Spiral (Needs Refactoring)
-- **Current State**: Placeholder implementation removed due to positioning issues
-- **Required Refactoring**: Need modular directional stair generation
-- **Planned Approach**: Create reusable method for generating stairs in any direction from any starting point
-
 ### Lighting Issues
 - **Backward Stairs**: Triangle winding partially fixed but may need further refinement
 - **Normal Calculation**: Some surfaces may have incorrect normals affecting lighting
@@ -163,7 +156,6 @@ StairGenerator/
 4. **Export Formats**: Add STL, PLY, and other 3D formats
 
 ### Feature Roadmap
-- **Spiral Staircase**: Complete rectangular spiral implementation
 - **Curved Stairs**: Support for curved and helical stairs
 - **Railings**: Add handrail generation
 - **Measurements**: Visual dimension display

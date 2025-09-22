@@ -37,7 +37,7 @@ namespace StairGenerator
             return mesh;
         }
 
-        public static MeshGeometry3D GenerateLinearStairwellMesh(List<StairLevel> stairLevels, double stepHeight, double stepLength, double stairWidth, double platformWidth, double platformDepth)
+        public static MeshGeometry3D GenerateLinearStairwellMesh(List<StairLevel> stairLevels, double stepHeight, double stepLength, double stairWidth, double platformWidth, double platformDepth, bool clockwise = true)
         {
             var mesh = new MeshGeometry3D();
             var positions = new Point3DCollection();
@@ -58,7 +58,11 @@ namespace StairGenerator
             {
                 var level = stairLevels[levelIndex];
                 bool isForward = levelIndex % 2 == 0;
-                bool isLeftSide = levelIndex % 2 == 0; // Forward on left, backward on right
+
+                // Determine side based on clockwise parameter
+                // When clockwise: odd levels on left side (1, 3, 5...), even levels on right side (0, 2, 4...)
+                // When counter-clockwise: even levels on left side (0, 2, 4...), odd levels on right side (1, 3, 5...)
+                bool isLeftSide = clockwise ? (levelIndex % 2 == 1) : (levelIndex % 2 == 0);
 
                 // Calculate stair starting position
                 double stairStartX = isLeftSide ? 0 : (platformWidth - stairWidth);
@@ -112,12 +116,6 @@ namespace StairGenerator
             return mesh;
         }
 
-        public static MeshGeometry3D GenerateRectangularSpiralMesh(List<StairLevel> stairLevels, double stepHeight, double stepLength, double stairWidth, double platformSize)
-        {
-            // TODO: Implement rectangular spiral generation
-            // This needs to be refactored to use a more modular approach with directional stair generation
-            return new MeshGeometry3D();
-        }
 
         private static void GenerateStairLevel(Point3DCollection positions, Int32Collection triangleIndices, Vector3DCollection normals,
             double startX, double startZ, double startY, int stepCount, double stepHeight, double stepLength, double stairWidth, bool isForward)

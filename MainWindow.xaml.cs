@@ -17,7 +17,6 @@ namespace StairGenerator
         private double cameraPhi = 30.0;   // Vertical rotation angle
         private Point3D modelCenter = new Point3D(0, 0, 0);
         private List<StairLevel> stairLevels = new List<StairLevel> { new StairLevel(), new StairLevel() };
-        private List<StairLevel> spiralLevels = new List<StairLevel> { new StairLevel(), new StairLevel(), new StairLevel(), new StairLevel() };
 
         public MainWindow()
         {
@@ -34,7 +33,6 @@ namespace StairGenerator
             
             // Initialize level UI
             RefreshLevelsUI();
-            RefreshSpiralLevelsUI();
         }
 
         private void CreateCoordinateAxes()
@@ -186,9 +184,6 @@ namespace StairGenerator
                     case StairType.LinearStairwell:
                         GenerateLinearStairwell();
                         break;
-                    case StairType.RectangularSpiral:
-                        GenerateRectangularSpiral();
-                        break;
                 }
             }
             catch (Exception ex)
@@ -203,8 +198,6 @@ namespace StairGenerator
                 return StairType.Single;
             else if (StairTypeTabControl.SelectedItem == LinearStairwellTab)
                 return StairType.LinearStairwell;
-            else if (StairTypeTabControl.SelectedItem == RectangularSpiralTab)
-                return StairType.RectangularSpiral;
             else
                 return StairType.Single; // Default
         }
@@ -226,11 +219,13 @@ namespace StairGenerator
             if (!ValidateLinearStairwellInputs(out double stepHeight, out double stepLength, out double stairWidth, out double platformWidth, out double platformDepth))
                 return;
 
-            currentStairMesh = MeshGenerator.GenerateLinearStairwellMesh(stairLevels, stepHeight, stepLength, stairWidth, platformWidth, platformDepth);
+            bool clockwise = ClockwiseCheckBox.IsChecked ?? true;
+            currentStairMesh = MeshGenerator.GenerateLinearStairwellMesh(stairLevels, stepHeight, stepLength, stairWidth, platformWidth, platformDepth, clockwise);
             DisplayStair(currentStairMesh);
-            
+
             int totalSteps = stairLevels.Sum(level => level.StepCount);
-            StatusTextBlock.Text = $"Generated linear stairwell with {stairLevels.Count} levels, {totalSteps} steps";
+            string direction = clockwise ? "clockwise" : "counter-clockwise";
+            StatusTextBlock.Text = $"Generated {direction} linear stairwell with {stairLevels.Count} levels, {totalSteps} steps";
         }
 
         private bool ValidateLinearStairwellInputs(out double stepHeight, out double stepLength, out double stairWidth, out double platformWidth, out double platformDepth)
@@ -274,17 +269,6 @@ namespace StairGenerator
 
 
 
-        private void GenerateRectangularSpiral()
-        {
-            if (!ValidateRectangularSpiralInputs(out double stepHeight, out double stepLength, out double stairWidth, out double platformSize))
-                return;
-
-            currentStairMesh = MeshGenerator.GenerateRectangularSpiralMesh(spiralLevels, stepHeight, stepLength, stairWidth, platformSize);
-            DisplayStair(currentStairMesh);
-            
-            int totalSteps = spiralLevels.Sum(level => level.StepCount);
-            StatusTextBlock.Text = $"Generated rectangular spiral with {spiralLevels.Count} levels, {totalSteps} steps";
-        }
 
         private void AddLevelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -479,126 +463,6 @@ namespace StairGenerator
             }
         }
 
-        private bool ValidateRectangularSpiralInputs(out double stepHeight, out double stepLength, out double stairWidth, out double platformSize)
-        {
-            stepHeight = stepLength = stairWidth = platformSize = 0;
-
-            if (!double.TryParse(SpiralStepHeightTextBox.Text, out stepHeight) || stepHeight <= 0)
-            {
-                StatusTextBlock.Text = "Invalid step height";
-                return false;
-            }
-
-            if (!double.TryParse(SpiralStepLengthTextBox.Text, out stepLength) || stepLength <= 0)
-            {
-                StatusTextBlock.Text = "Invalid step length";
-                return false;
-            }
-
-            if (!double.TryParse(SpiralStairWidthTextBox.Text, out stairWidth) || stairWidth <= 0)
-            {
-                StatusTextBlock.Text = "Invalid stair width";
-                return false;
-            }
-
-            if (!double.TryParse(SpiralPlatformSizeTextBox.Text, out platformSize) || platformSize <= 0)
-            {
-                StatusTextBlock.Text = "Invalid platform size";
-                return false;
-            }
-
-            return true;
-        }
-
-        private void AddSpiralLevelButton_Click(object sender, RoutedEventArgs e)
-        {
-            spiralLevels.Add(new StairLevel());
-            RefreshSpiralLevelsUI();
-            UpdateSpiralTotalHeight();
-        }
-
-        private void RemoveSpiralLevelButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (spiralLevels.Count > 1)
-            {
-                spiralLevels.RemoveAt(spiralLevels.Count - 1);
-                RefreshSpiralLevelsUI();
-                UpdateSpiralTotalHeight();
-            }
-        }
-
-        private void RefreshSpiralLevelsUI()
-        {
-            SpiralLevelsStackPanel.Children.Clear();
-            
-            for (int i = 0; i < spiralLevels.Count; i++)
-            {
-                var levelPanel = CreateSpiralLevelPanel(i);
-                SpiralLevelsStackPanel.Children.Add(levelPanel);
-            }
-            
-            UpdateSpiralTotalHeight();
-        }
-
-        private StackPanel CreateSpiralLevelPanel(int levelIndex)
-        {
-            var panel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 5) };
-            
-            // Direction label
-            string[] directions = { "Forward", "Left", "Backward", "Right" };
-            var directionText = directions[levelIndex % 4];
-            
-            var label = new TextBlock 
-            { 
-                Text = $"{directionText}:", 
-                Width = 70, 
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            
-            // Steps textbox
-            var stepsLabel = new TextBlock 
-            { 
-                Text = "Steps:", 
-                Margin = new Thickness(5, 0, 5, 0), 
-                VerticalAlignment = VerticalAlignment.Center 
-            };
-            
-            var stepsTextBox = new TextBox 
-            { 
-                Text = spiralLevels[levelIndex].StepCount.ToString(), 
-                Width = 40, 
-                Tag = levelIndex 
-            };
-            stepsTextBox.TextChanged += SpiralStepsTextBox_TextChanged;
-            
-            panel.Children.Add(label);
-            panel.Children.Add(stepsLabel);
-            panel.Children.Add(stepsTextBox);
-            
-            return panel;
-        }
-
-        private void SpiralStepsTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (sender is TextBox textBox && textBox.Tag is int levelIndex)
-            {
-                if (int.TryParse(textBox.Text, out int steps) && steps > 0)
-                {
-                    spiralLevels[levelIndex].StepCount = steps;
-                    UpdateSpiralTotalHeight();
-                }
-            }
-        }
-
-        private void UpdateSpiralTotalHeight()
-        {
-            if (double.TryParse(SpiralStepHeightTextBox?.Text ?? "180", out double stepHeight))
-            {
-                int totalSteps = spiralLevels.Sum(level => level.StepCount);
-                double totalHeight = totalSteps * stepHeight;
-                SpiralTotalHeightTextBlock.Text = $"Total Height: {totalHeight:F0} mm ({totalSteps} steps)";
-            }
-        }
 
     }
 }
