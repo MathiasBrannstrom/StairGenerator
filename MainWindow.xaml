@@ -14,25 +14,7 @@
                 <StackPanel>
                     <TextBlock Text="Stair Generator" FontSize="16" FontWeight="Bold" Margin="0,0,0,20"/>
                     
-                    <TabControl x:Name="StairTypeTabControl" Margin="0,0,0,20" SelectedIndex="1">
-                        <TabItem Header="Single Stair" x:Name="SingleStairTab">
-                            <StackPanel Margin="10">
-                                <TextBlock Text="Basic straight staircase" FontStyle="Italic" Margin="0,0,0,10"/>
-                                
-                                <TextBlock Text="Overall Height (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="OverallHeightTextBox" Text="2700" Margin="0,0,0,15"/>
-                                
-                                <TextBlock Text="Step Height (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="StepHeightTextBox" Text="180" Margin="0,0,0,15"/>
-                                
-                                <TextBlock Text="Step Length (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="StepLengthTextBox" Text="280" Margin="0,0,0,15"/>
-                                
-                                <TextBlock Text="Stair Width (mm):" Margin="0,0,0,5"/>
-                                <TextBox x:Name="StairWidthTextBox" Text="1000" Margin="0,0,0,15"/>
-                            </StackPanel>
-                        </TabItem>
-                        
+                    <TabControl x:Name="StairTypeTabControl" Margin="0,0,0,20" SelectedIndex="0">
                         <TabItem Header="Linear Stairwell" x:Name="LinearStairwellTab">
                             <StackPanel Margin="10">
                                 <TextBlock Text="Stairs with landings (forward/backward)" FontStyle="Italic" Margin="0,0,0,10"/>

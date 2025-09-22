@@ -181,9 +181,6 @@ namespace StairGenerator
                 
                 switch (selectedStairType)
                 {
-                    case StairType.Single:
-                        GenerateSingleStair();
-                        break;
                     case StairType.LinearStairwell:
                         GenerateLinearStairwell();
                         break;
@@ -197,24 +194,10 @@ namespace StairGenerator
 
         private StairType GetSelectedStairType()
         {
-            if (StairTypeTabControl.SelectedItem == SingleStairTab)
-                return StairType.Single;
-            else if (StairTypeTabControl.SelectedItem == LinearStairwellTab)
+            if (StairTypeTabControl.SelectedItem == LinearStairwellTab)
                 return StairType.LinearStairwell;
             else
-                return StairType.Single; // Default
-        }
-
-        private void GenerateSingleStair()
-        {
-            if (!ValidateInputs(out double overallHeight, out double stepHeight, out double stepLength, out double stairWidth))
-                return;
-
-            currentStairMesh = MeshGenerator.GenerateSingleStairMesh(overallHeight, stepHeight, stepLength, stairWidth);
-            DisplayStair(currentStairMesh);
-            
-            int stepCount = (int)Math.Ceiling(overallHeight / stepHeight);
-            StatusTextBlock.Text = $"Generated single stair with {stepCount} steps";
+                return StairType.LinearStairwell; // Default
         }
 
         private void GenerateLinearStairwell()
@@ -395,36 +378,6 @@ namespace StairGenerator
             }
         }
 
-        private bool ValidateInputs(out double overallHeight, out double stepHeight, out double stepLength, out double stairWidth)
-        {
-            overallHeight = stepHeight = stepLength = stairWidth = 0;
-
-            if (!double.TryParse(OverallHeightTextBox.Text, out overallHeight) || overallHeight <= 0)
-            {
-                StatusTextBlock.Text = "Invalid overall height";
-                return false;
-            }
-
-            if (!double.TryParse(StepHeightTextBox.Text, out stepHeight) || stepHeight <= 0)
-            {
-                StatusTextBlock.Text = "Invalid step height";
-                return false;
-            }
-
-            if (!double.TryParse(StepLengthTextBox.Text, out stepLength) || stepLength <= 0)
-            {
-                StatusTextBlock.Text = "Invalid step length";
-                return false;
-            }
-
-            if (!double.TryParse(StairWidthTextBox.Text, out stairWidth) || stairWidth <= 0)
-            {
-                StatusTextBlock.Text = "Invalid stair width";
-                return false;
-            }
-
-            return true;
-        }
 
 
 

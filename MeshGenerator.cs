@@ -5,38 +5,6 @@ namespace StairGenerator
 {
     public static class MeshGenerator
     {
-        public static MeshGeometry3D GenerateSingleStairMesh(double overallHeight, double stepHeight, double stepLength, double stairWidth)
-        {
-            var mesh = new MeshGeometry3D();
-            var positions = new Point3DCollection();
-            var triangleIndices = new Int32Collection();
-            var normals = new Vector3DCollection();
-
-            // Convert to meters for display
-            stepHeight /= 1000.0;
-            stepLength /= 1000.0;
-            stairWidth /= 1000.0;
-
-            int stepCount = (int)Math.Ceiling(overallHeight / (stepHeight * 1000.0));
-            double actualStepHeight = (overallHeight / 1000.0) / stepCount;
-
-            for (int step = 0; step < stepCount; step++)
-            {
-                double currentHeight = step * actualStepHeight;
-                double nextHeight = (step + 1) * actualStepHeight;
-                double currentDepth = step * stepLength;
-                double nextDepth = (step + 1) * stepLength;
-
-                AddStepToMesh(positions, triangleIndices, normals,
-                    currentHeight, nextHeight, currentDepth, nextDepth, stairWidth);
-            }
-
-            mesh.Positions = positions;
-            mesh.TriangleIndices = triangleIndices;
-            mesh.Normals = normals;
-            return mesh;
-        }
-
         public static MeshGeometry3D GenerateLinearStairwellMesh(List<StairLevel> stairLevels, double stepHeight, double stepLength, double stairWidth, double platformWidth, double platformDepth, bool clockwise = true)
         {
             var mesh = new MeshGeometry3D();

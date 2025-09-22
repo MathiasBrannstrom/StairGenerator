@@ -2,7 +2,6 @@ namespace StairGenerator
 {
     public enum StairType
     {
-        Single,
         LinearStairwell
     }
 
