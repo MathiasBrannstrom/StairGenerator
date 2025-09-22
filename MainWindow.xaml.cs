@@ -33,6 +33,9 @@ namespace StairGenerator
             
             // Initialize level UI
             RefreshLevelsUI();
+
+            // Generate default stair on startup
+            GenerateLinearStairwell();
         }
 
         private void CreateCoordinateAxes()
@@ -232,11 +235,24 @@ namespace StairGenerator
         {
             stepHeight = stepLength = stairWidth = platformWidth = platformDepth = 0;
 
-            if (!double.TryParse(LinearStepHeightTextBox.Text, out stepHeight) || stepHeight <= 0)
+            if (!double.TryParse(LinearStairwellHeightTextBox.Text, out double stairwellHeight) || stairwellHeight <= 0)
             {
-                StatusTextBlock.Text = "Invalid step height";
+                StatusTextBlock.Text = "Invalid stairwell height";
                 return false;
             }
+
+            // Calculate step height based on stairwell height, total steps, and platforms
+            int totalSteps = stairLevels.Sum(level => level.StepCount);
+            int totalPlatforms = Math.Max(0, stairLevels.Count - 1); // One less platform than levels
+            int totalRises = totalSteps + totalPlatforms;
+
+            if (totalRises <= 0)
+            {
+                StatusTextBlock.Text = "No steps defined";
+                return false;
+            }
+
+            stepHeight = stairwellHeight / totalRises;
 
             if (!double.TryParse(LinearStepLengthTextBox.Text, out stepLength) || stepLength <= 0)
             {
@@ -347,14 +363,35 @@ namespace StairGenerator
             }
         }
 
+        private void StairwellHeightTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            UpdateTotalHeight();
+        }
+
 
         private void UpdateTotalHeight()
         {
-            if (double.TryParse(LinearStepHeightTextBox?.Text ?? "180", out double stepHeight))
+            // Ensure UI elements are initialized before updating
+            if (TotalHeightTextBlock == null || CalculatedStepHeightTextBlock == null)
+                return;
+
+            if (double.TryParse(LinearStairwellHeightTextBox?.Text ?? "2700", out double stairwellHeight))
             {
                 int totalSteps = stairLevels.Sum(level => level.StepCount);
-                double totalHeight = totalSteps * stepHeight;
-                TotalHeightTextBlock.Text = $"Total Height: {totalHeight:F0} mm ({totalSteps} steps)";
+                int totalPlatforms = Math.Max(0, stairLevels.Count - 1); // One less platform than levels
+                int totalRises = totalSteps + totalPlatforms;
+
+                TotalHeightTextBlock.Text = $"Total Steps: {totalSteps} steps, {totalPlatforms} platforms";
+
+                if (totalRises > 0)
+                {
+                    double calculatedStepHeight = stairwellHeight / totalRises;
+                    CalculatedStepHeightTextBlock.Text = $"Calculated Step Height: {calculatedStepHeight:F1} mm";
+                }
+                else
+                {
+                    CalculatedStepHeightTextBlock.Text = "Calculated Step Height: N/A";
+                }
             }
         }
 

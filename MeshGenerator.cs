@@ -121,7 +121,6 @@ namespace StairGenerator
             return mesh;
         }
 
-
         private static void GenerateStairLevel(Point3DCollection positions, Int32Collection triangleIndices, Vector3DCollection normals,
             double startX, double startZ, double startY, int stepCount, double stepHeight, double stepLength, double stairWidth, bool isForward)
         {

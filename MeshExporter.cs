@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text;
 using System.Windows.Media.Media3D;
+using System.Globalization;
 
 namespace StairGenerator
 {
@@ -9,16 +10,17 @@ namespace StairGenerator
         public static void ExportToOBJ(MeshGeometry3D mesh, string filename)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("# Stair Generator OBJ Export");
+            sb.AppendLine("# Stair Generator OBJ Export - Units: meters");
             sb.AppendLine();
 
-            // Export vertices - convert from meters back to millimeters for export
+            // Export vertices in meters with high precision
             foreach (var position in mesh.Positions)
             {
-                double x = position.X * 1000.0; // Convert back to mm
-                double y = position.Y * 1000.0;
-                double z = position.Z * 1000.0;
-                sb.AppendLine($"v {x:F6} {y:F6} {z:F6}");
+                double x = position.X;
+                double y = position.Y;
+                double z = position.Z;
+                // Use invariant culture to ensure period as decimal separator for OBJ standard
+                sb.AppendLine($"v {x.ToString("F9", CultureInfo.InvariantCulture)} {y.ToString("F9", CultureInfo.InvariantCulture)} {z.ToString("F9", CultureInfo.InvariantCulture)}");
             }
 
             sb.AppendLine();
