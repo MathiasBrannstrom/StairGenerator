@@ -66,7 +66,7 @@ namespace StairGenerator
 
                 // Calculate stair starting position
                 double stairStartX = isLeftSide ? 0 : (platformWidth - stairWidth);
-                
+
                 // For stairs after the first level, adjust starting Z position to connect to platform
                 double stairStartZ = currentZ;
                 if (levelIndex > 0)
@@ -79,7 +79,7 @@ namespace StairGenerator
                 }
 
                 // Generate stairs for this level
-                GenerateStairLevel(positions, triangleIndices, normals, 
+                GenerateStairLevel(positions, triangleIndices, normals,
                     stairStartX, stairStartZ, currentY, level.StepCount, stepHeight, stepLength, stairWidth, isForward);
 
                 // Update position after stairs
@@ -87,11 +87,12 @@ namespace StairGenerator
                     currentZ = stairStartZ + level.StepCount * stepLength;
                 else
                     currentZ = stairStartZ - level.StepCount * stepLength;
-                
+
                 currentY += level.StepCount * stepHeight;
 
+
                 // Generate platform after stairs
-                if (levelIndex < stairLevels.Count - 1 || levelIndex == stairLevels.Count - 1)
+                if (levelIndex < stairLevels.Count - 1)
                 {
                     // Platform should be one step height above the last step
                     double platformY = currentY + stepHeight;
@@ -108,6 +109,10 @@ namespace StairGenerator
                             currentZ -= platformDepth;
                     }
                 }
+
+                // Add extra stepHeight to account for platform height
+                currentY += stepHeight;
+
             }
 
             mesh.Positions = positions;
