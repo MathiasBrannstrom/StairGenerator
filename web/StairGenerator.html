@@ -427,16 +427,16 @@
             addQuadTriangles(indices, baseIndex + 4, baseIndex + 5, baseIndex + 6, baseIndex + 7);
 
             // Front face
-            addQuadTriangles(indices, baseIndex + 8, baseIndex + 11, baseIndex + 10, baseIndex + 9);
+            addQuadTriangles(indices, baseIndex + 8, baseIndex + 9, baseIndex + 10, baseIndex + 11);
 
             // Back face
-            addQuadTriangles(indices, baseIndex + 12, baseIndex + 13, baseIndex + 14, baseIndex + 15);
+            addQuadTriangles(indices, baseIndex + 15, baseIndex + 14, baseIndex + 13, baseIndex + 12);
 
             // Left face
-            addQuadTriangles(indices, baseIndex + 16, baseIndex + 19, baseIndex + 18, baseIndex + 17);
+            addQuadTriangles(indices, baseIndex + 16, baseIndex + 17, baseIndex + 18, baseIndex + 19);
 
             // Right face
-            addQuadTriangles(indices, baseIndex + 20, baseIndex + 21, baseIndex + 22, baseIndex + 23);
+            addQuadTriangles(indices, baseIndex + 20, baseIndex + 23, baseIndex + 22, baseIndex + 21);
         }
 
         function addStepToMesh(positions, indices, normals, currentHeight, nextHeight, currentDepth, nextDepth, width, offsetX, isForward) {
