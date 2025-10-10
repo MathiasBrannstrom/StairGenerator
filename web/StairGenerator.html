@@ -442,7 +442,7 @@
         function addStepToMesh(positions, indices, normals, currentHeight, nextHeight, currentDepth, nextDepth, width, offsetX, isForward) {
             const baseIndex = positions.length / 3;
 
-            // Step top surface (rectangle) - offset by startX
+            // Top surface vertices
             positions.push(offsetX, nextHeight, currentDepth);              // 0
             positions.push(offsetX + width, nextHeight, currentDepth);     // 1
             positions.push(offsetX + width, nextHeight, nextDepth);        // 2
@@ -451,14 +451,50 @@
             // Top surface normals (pointing up)
             for (let i = 0; i < 4; i++) normals.push(0, 1, 0);
 
-            // Step front face (rectangle) - offset by startX
-            positions.push(offsetX, currentHeight, currentDepth);          // 4
+            // Bottom surface vertices
+            positions.push(offsetX, currentHeight, currentDepth);           // 4
             positions.push(offsetX + width, currentHeight, currentDepth);  // 5
-            positions.push(offsetX + width, nextHeight, currentDepth);     // 6
-            positions.push(offsetX, nextHeight, currentDepth);             // 7
+            positions.push(offsetX + width, currentHeight, nextDepth);     // 6
+            positions.push(offsetX, currentHeight, nextDepth);             // 7
+
+            // Bottom surface normals (pointing down)
+            for (let i = 0; i < 4; i++) normals.push(0, -1, 0);
+
+            // Front face vertices (at currentDepth)
+            positions.push(offsetX, currentHeight, currentDepth);          // 8
+            positions.push(offsetX + width, currentHeight, currentDepth);  // 9
+            positions.push(offsetX + width, nextHeight, currentDepth);     // 10
+            positions.push(offsetX, nextHeight, currentDepth);             // 11
 
             // Front face normals
-            for (let i = 0; i < 4; i++) normals.push(0, 0, -1);
+            for (let i = 0; i < 4; i++) normals.push(0, 0, isForward ? -1 : 1);
+
+            // Back face vertices (at nextDepth)
+            positions.push(offsetX, currentHeight, nextDepth);             // 12
+            positions.push(offsetX + width, currentHeight, nextDepth);     // 13
+            positions.push(offsetX + width, nextHeight, nextDepth);        // 14
+            positions.push(offsetX, nextHeight, nextDepth);                // 15
+
+            // Back face normals
+            for (let i = 0; i < 4; i++) normals.push(0, 0, isForward ? 1 : -1);
+
+            // Left face vertices (at offsetX)
+            positions.push(offsetX, currentHeight, currentDepth);          // 16
+            positions.push(offsetX, currentHeight, nextDepth);             // 17
+            positions.push(offsetX, nextHeight, nextDepth);                // 18
+            positions.push(offsetX, nextHeight, currentDepth);             // 19
+
+            // Left face normals (pointing left)
+            for (let i = 0; i < 4; i++) normals.push(-1, 0, 0);
+
+            // Right face vertices (at offsetX + width)
+            positions.push(offsetX + width, currentHeight, currentDepth);  // 20
+            positions.push(offsetX + width, currentHeight, nextDepth);     // 21
+            positions.push(offsetX + width, nextHeight, nextDepth);        // 22
+            positions.push(offsetX + width, nextHeight, currentDepth);     // 23
+
+            // Right face normals (pointing right)
+            for (let i = 0; i < 4; i++) normals.push(1, 0, 0);
 
             // Add triangles for top surface - adjust winding for backward stairs
             if (isForward) {
@@ -467,11 +503,39 @@
                 addQuadTriangles(indices, baseIndex + 0, baseIndex + 1, baseIndex + 2, baseIndex + 3);
             }
 
+            // Add triangles for bottom surface
+            if (isForward) {
+                addQuadTriangles(indices, baseIndex + 4, baseIndex + 5, baseIndex + 6, baseIndex + 7);
+            } else {
+                addQuadTriangles(indices, baseIndex + 4, baseIndex + 7, baseIndex + 6, baseIndex + 5);
+            }
+
             // Add triangles for front face - reverse winding for backward stairs
             if (isForward) {
-                addQuadTriangles(indices, baseIndex + 4, baseIndex + 7, baseIndex + 6, baseIndex + 5);
+                addQuadTriangles(indices, baseIndex + 8, baseIndex + 11, baseIndex + 10, baseIndex + 9);
             } else {
-                addQuadTriangles(indices, baseIndex + 7, baseIndex + 4, baseIndex + 5, baseIndex + 6);
+                addQuadTriangles(indices, baseIndex + 11, baseIndex + 8, baseIndex + 9, baseIndex + 10);
+            }
+
+            // Add triangles for back face
+            if (isForward) {
+                addQuadTriangles(indices, baseIndex + 12, baseIndex + 13, baseIndex + 14, baseIndex + 15);
+            } else {
+                addQuadTriangles(indices, baseIndex + 13, baseIndex + 12, baseIndex + 15, baseIndex + 14);
+            }
+
+            // Add triangles for left face
+            if (isForward) {
+                addQuadTriangles(indices, baseIndex + 16, baseIndex + 17, baseIndex + 18, baseIndex + 19);
+            } else {
+                addQuadTriangles(indices, baseIndex + 17, baseIndex + 16, baseIndex + 19, baseIndex + 18);
+            }
+
+            // Add triangles for right face
+            if (isForward) {
+                addQuadTriangles(indices, baseIndex + 20, baseIndex + 23, baseIndex + 22, baseIndex + 21);
+            } else {
+                addQuadTriangles(indices, baseIndex + 23, baseIndex + 20, baseIndex + 21, baseIndex + 22);
             }
         }
 
